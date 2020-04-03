@@ -3,16 +3,16 @@ import tkinter as tk
 from random import choice
 
 SIZE = 6
-INCREMENT = 10
+INCREMENT = 15
 class snake(tk.Canvas):
 	def __init__(self, master):
 		super().__init__(width=600, height=600, highlightthickness=0)
 
 		self.snake_pos = [(130, 100), (115, 100), (100, 100)]
 		self.food_pos = (150, 150)
+		self.after(80, self.game_clock)
 
 		self.create_objects()
-		self.move_snake()
 		
 
 		self.pack()
@@ -30,7 +30,12 @@ class snake(tk.Canvas):
 
 		new_head = (head_x + INCREMENT, head_y)
 		self.snake_pos = [new_head]	 + self.snake_pos[:-1]
-		print(self.snake_pos)
+		for segment, pos in zip(self.find_withtag("snake", ))
+		self.coords(find_withtag(snake), )
+
+	def game_clock(self):
+		self.move_snake()
+		self.after(80, self.game_clock)
 
 
 		
