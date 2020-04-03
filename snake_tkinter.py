@@ -2,15 +2,15 @@
 import tkinter as tk
 from random import choice
 
-SIZE = 6
-INCREMENT = 15
+SIZE = 5
+INCREMENT = 13
 class snake(tk.Canvas):
 	def __init__(self, master):
-		super().__init__(width=600, height=600, highlightthickness=0)
+		super().__init__(width=600, height=600, highlightthickness=0, background="white")
 
-		self.snake_pos = [(130, 100), (115, 100), (100, 100)]
+		self.snake_pos = [(125, 105, 115, 95), (120, 105, 110, 95), (105, 105, 95, 95)]
 		self.food_pos = (150, 150)
-		self.after(80, self.game_clock)
+		self.after(200, self.game_clock)
 
 		self.create_objects()
 		
@@ -19,23 +19,29 @@ class snake(tk.Canvas):
 
 	def create_objects(self):
 		"""(x_pos, y_pos) är mitten av kvadraten, SIZE är från mitt punkten tills kvadraten är ritad (radius)""" 
-		for x_pos, y_pos in self.snake_pos:
-			self.create_rectangle(x_pos+SIZE, y_pos+SIZE, x_pos-SIZE, y_pos-SIZE, tag="snake") #x1, y1, x2, y2
+		for individual_snake_block in self.snake_pos:
+			self.create_rectangle(*individual_snake_block, tag="snake", fill="black") #x1, y1, x2, y2
 
 			self.create_rectangle(self.food_pos[0]+SIZE, self.food_pos[1]+SIZE, self.food_pos[0]-SIZE, \
 				self.food_pos[1]-SIZE, tag="food", fill="red")
 
 	def move_snake(self):
-		head_x, head_y = self.snake_pos[0]
+		head_x1, head_y1, head_x2, head_y2 = self.snake_pos[0]
 
-		new_head = (head_x + INCREMENT, head_y)
+		new_head = (head_x1 + INCREMENT, head_y1, head_x2 + INCREMENT, head_y2)
 		self.snake_pos = [new_head]	 + self.snake_pos[:-1]
-		for segment, pos in zip(self.find_withtag("snake", ))
-		self.coords(find_withtag(snake), )
+		for current_pos, expected_pos in zip(self.find_withtag("snake"), self.snake_pos):
+			print(current_pos, expected_pos)
+			self.coords(current_pos, *expected_pos)
 
 	def game_clock(self):
 		self.move_snake()
-		self.after(80, self.game_clock)
+		self.after(200, self.game_clock)
+
+	# def convert_format(self, all_cordinates):
+	# 	for x, y in all_cordinates:
+
+	# 	return x+SIZE, y+SIZE, x-SIZE, y-SIZE
 
 
 		
