@@ -12,19 +12,23 @@ class snake(tk.Canvas):
 	def __init__(self, master):
 		super().__init__(width=WIDTH, height=HEIGHT, highlightthickness=0, background="white")
 
-		self.snake_pos = [(65, 15, 75, 25), (0, 0, 0, 0) , (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)]
-		self.fruit_pos = self.random_pos()
+		self.snake_pos = [(65, 15, 75, 25), (0, 0, 0, 0), (0, 0, 0, 0)]
+		self.create_the_snake()
+		
+		self.score = -1
+		self.create_text(WIDTH/2, 20, text=(self.score), font=("Pixel", 5), fill="grey", tag="text")
+
+		self.move_fruit()
 		self.key= "l"
-		self.after(GAME_SPEED, self.game_clock)
+
 		self.bind_all('<Key>', self.get_key)
-		self.create_objects()
+		self.after(GAME_SPEED, self.game_clock)
 		self.pack()
 
-	def create_objects(self):
+	def create_the_snake(self):
 		for individual_snake_block in self.snake_pos:
 			self.create_rectangle(*individual_snake_block, tag="snake", fill="black") #x1, y1, x2, y2
 
-			self.move_fruit()
 
 	def move_snake(self): 
 		head_x1, head_y1, head_x2, head_y2 = self.snake_pos[0]
@@ -61,10 +65,12 @@ class snake(tk.Canvas):
 
 	def move_fruit(self):
 		self.delete("fruit")
-		self.fruit_pos = self.random_pos()
+		self.fruit_pos = self.random_fruit_pos()
 		self.create_rectangle(*self.fruit_pos, fill="red", tag="fruit")
+		self.score += 1
+		self.itemconfig("text", text=self.score)
 
-	def random_pos(self):
+	def random_fruit_pos(self):
 			while True:
 				random_location = float(randrange(30, WIDTH, 30)) #min size, screen size, step size
 				e = random_location-10, random_location-30, random_location, random_location-20	
@@ -73,19 +79,16 @@ class snake(tk.Canvas):
 
 	def get_key(self, event):
 		if event.char in ["i", "l", "k", "j"]:
-			self.key = event.char
+			"""prohibits the snake from killing itself
+			!!! curently a bug that allows the snake to kill itself if you press 2 buttons at
+			the same time"""
+			if not self.key == "l" and event.char == "j":
+				self.key = event.char
+			elif not self.key == "k" and event.char == "i":
+				self.key = event.char
+			elif not self.key == "j" and event.char == "l":
+				self.key = event.char
+			elif not self.key == "i" and event.char == "k":
+				self.key = event.char
 
-def main():
-	"""Setup"""
-	root = tk.Tk()
-	root.title("snake")
-	root.tk.call("tk", "scaling", 4.0)
-	root.resizable(False, False)
-	
-	app = snake(root)
 
-	root.mainloop()
-
-
-if __name__ == '__main__':
-	main()
