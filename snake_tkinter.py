@@ -1,22 +1,29 @@
 import tkinter as tk
 from random import randrange
+'''
+~ = might not be possible to do
 
-"""Next step add a scoreboard"""
+Things to do:
+fix (1)
+fix(2)
+~Accept key inputs during the 200ms wait time (3)
+'''
+
 """Constants"""
 INCREMENT = 15
 GAME_SPEED = 200
-WIDTH = 300
-HEIGHT = 300
 
 class snake(tk.Canvas):
-	def __init__(self, master):
-		super().__init__(width=WIDTH, height=HEIGHT, highlightthickness=0, background="white")
+	def __init__(self, master, width, height):
+		super().__init__(width=width, height=width, highlightthickness=0, background="white")
+		self.WIDTH = width
+		self.HEIGHT = height
 
 		self.snake_pos = [(65, 15, 75, 25), (0, 0, 0, 0), (0, 0, 0, 0)]
 		self.create_the_snake()
-		
+
 		self.score = -1
-		self.create_text(WIDTH/2, 20, text=(self.score), font=("Pixel", 5), fill="grey", tag="text")
+		self.create_text(self.WIDTH/2, 20, text=(self.score), font=("Pixel", 5), fill="grey", tag="text")
 
 		self.move_fruit()
 		self.key= "l"
@@ -54,13 +61,14 @@ class snake(tk.Canvas):
 	def game_clock(self):
 		self.move_snake()
 		self.check_collsion()
-		self.after(GAME_SPEED, self.game_clock)
+		self.after(GAME_SPEED, self.game_clock) #(3)
 
 	def check_collsion(self):
 		if self.snake_pos[0] in self.snake_pos[1:]:
 			self.quit()
+			"""(1)!!! the pixel x and y size of the screen needs to be the same atm"""
 		for number in self.snake_pos[0]:
-			if number > WIDTH or number < 0:
+			if number > self.WIDTH or number < 0:
 				self.quit()
 
 	def move_fruit(self):
@@ -72,7 +80,7 @@ class snake(tk.Canvas):
 
 	def random_fruit_pos(self):
 			while True:
-				random_location = float(randrange(30, WIDTH, 30)) #min size, screen size, step size
+				random_location = float(randrange(30, self.WIDTH, 30)) #min size, screen size, step size
 				e = random_location-10, random_location-30, random_location, random_location-20	
 				if e not in self.snake_pos:
 					return e	
@@ -80,7 +88,7 @@ class snake(tk.Canvas):
 	def get_key(self, event):
 		if event.char in ["i", "l", "k", "j"]:
 			"""prohibits the snake from killing itself
-			!!! curently a bug that allows the snake to kill itself if you press 2 buttons at
+			(2)!!! curently a bug that allows the snake to kill itself if you press 2 buttons at
 			the same time"""
 			if not self.key == "l" and event.char == "j":
 				self.key = event.char
