@@ -14,8 +14,9 @@ INCREMENT = 15
 GAME_SPEED = 200
 
 class snake(tk.Canvas):
-	def __init__(self, master, width, height):
+	def __init__(self, width, height):
 		super().__init__(width=width, height=width, highlightthickness=0, background="white")
+		# self.master = master
 		self.WIDTH = width
 		self.HEIGHT = height
 
